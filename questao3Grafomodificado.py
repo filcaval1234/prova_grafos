@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from grafo123 import Grafo
 n = ["a", "b", "c", "d", "e"]
 a = {"a1":"a-b", "a2":"b-c", "a3":"c-d","a4":"c-a"}
@@ -13,7 +14,7 @@ def naoAdjacente(n, matriz):
                 listaNaoAdjacente.append(n[i]+"_"+n[j])
     print(listaNaoAdjacente)
 
-def existeLaço(matriz):
+def existeLaco(matriz):
     for i in range(len(matriz)):
         for j in range(len(matriz)):
             if (i == j and matriz[i][j] == 1):
@@ -26,6 +27,23 @@ def verificaParalelo(matriz):
             if matriz[i][j] == matriz[j][i]:
                 return True
     return False
+
+def clone(matriz):
+    return matriz[:]
+
+def max(pos_1, pos_2):
+    if pos_1 != pos_2:
+        return 1
+    return 0
+
+def warshall(matriz_adjacencia):
+    E = matriz_adjacencia.clone()
+    for i in range(len(E)):
+        for j in range(len(E)):
+            if E[j][i] == 1:
+                for k in range(len(E)):
+                    E[j][k] = max(E[j][k],E[i][k])
+    return E
 
 def verificaGrau(matriz, vertice, n):
     indiceVertice = n.index(vertice)
@@ -155,7 +173,6 @@ def salvaCaminho(x,y,n):
     '''retorna algo do tipo "A¹-A²" sendo A¹ e A² vertices '''
     return  n[x]+"-"+n[y]
 
-for i in matriz:
-    print(i)
-conbinac = conbinacoes(matriz)
-print(procura(0,0))
+
+
+print(warshall(matriz))
