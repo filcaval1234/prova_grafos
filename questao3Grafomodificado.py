@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from pip.cmdoptions import no_binary
+
 from grafo123 import Grafo
 n = ["a", "b", "c", "d", "e"]
 a = {"a1":"a-b", "a2":"b-c", "a3":"c-d","a4":"c-a"}
@@ -124,7 +126,7 @@ def arestaExistente(matriz, index, numeroHaSerRetirado=-1):
 
 def caminhoAresta(valor, listacaminho, listaindex,tamanho, i=1):
     '''esta funcao usa de outras 4 funcoes ( tiraRepetido(), excluiRepetido(),
-        encontraUm() e salva Caminho) onde sua finalidade e encontrar o caminho de
+        engrauraUm() e salva Caminho) onde sua finalidade e engraurar o caminho de
         tamanho aleatorio passado pelo parametro tamanho'''
     if i == len(listaindex):
         return
@@ -158,7 +160,7 @@ def excluirepetido(lista):
         except:
             continue
 
-def encontraUM(matriz):
+def engrauraUM(matriz):
     '''esta funcao salva os indices de todas as arestas, ou seja, salva
     os indices onde tem 1'''
     listaIndex = []
@@ -173,6 +175,40 @@ def salvaCaminho(x,y,n):
     '''retorna algo do tipo "A¹-A²" sendo A¹ e A² vertices '''
     return  n[x]+"-"+n[y]
 
+def ligacao(matriz):
+    ligacao = []
+    for i in range(len(matriz)):
+        for j in range(len(matriz)):
+            if matriz[i][j] == 1:
+                ligacao.append([i,j])
+
+    return ligacao
+
+def nosGrauImpar(matriz):
+    grau = 0
+    quantNoGrauImpar = 0
+    noImpar = 0
+    nosImpar = []
+    for i in range(len(matriz)):
+        grau = matriz[i].count(1)
+        for j in range(len(matriz)-1):
+            if matriz[j+1][i] == 1: 
+                grau += 1
+            if grau %2 != 0:
+                noImpar = i
+        nosImpar.append(noImpar)
+        if grau %2 != 0:
+            quantNoGrauImpar += 1
+    return nosImpar
+
+            
+
+def euleriano(matriz):
+    ligacaos = ligacao(matriz)
+    #if conexo(matriz,conbinacoes(matriz)) == True:
 
 
-print(warshall(matriz))
+for i in range(len(matriz)):
+    for j in range(len(matriz)):
+        print(matriz[i][j], end=" ")
+print(nosGrauImpar(matriz))
