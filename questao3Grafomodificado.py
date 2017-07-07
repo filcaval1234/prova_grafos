@@ -2,11 +2,10 @@
 from pip.cmdoptions import no_binary
 
 from grafo123 import Grafo
-n = ["a", "b", "c", "d", "e"]
-a = {"a1":"a-b", "a2":"b-c", "a3":"c-d","a4":"c-a"}
+n = ["a", "b", "c", "d"]
+a = {"a1":"a-b", "a2":"b-c", "a3":"c-d", "a4":"d-a" }
 grafo = Grafo(N=n, A=a);
 matriz = grafo.colocaMatriz(a, n)
-print(type(matriz))
 
 def naoAdjacente(n, matriz):
     listaNaoAdjacente = []
@@ -29,23 +28,6 @@ def verificaParalelo(matriz):
             if matriz[i][j] == matriz[j][i]:
                 return True
     return False
-
-def clone(matriz):
-    return matriz[:]
-
-def max(pos_1, pos_2):
-    if pos_1 != pos_2:
-        return 1
-    return 0
-
-def warshall(matriz_adjacencia):
-    E = matriz_adjacencia.clone()
-    for i in range(len(E)):
-        for j in range(len(E)):
-            if E[j][i] == 1:
-                for k in range(len(E)):
-                    E[j][k] = max(E[j][k],E[i][k])
-    return E
 
 def verificaGrau(matriz, vertice, n):
     indiceVertice = n.index(vertice)
@@ -184,31 +166,112 @@ def ligacao(matriz):
 
     return ligacao
 
+def criaMatriz(matriz1):
+    ''' Cria uma matriz NXN de espaços vazios'''
+    matriz = []
+    for i in range(len(matriz1)):
+        matriz.append([])
+        for j in range(len(matriz1)):
+            matriz[i].append(None)
+    return matriz
+
+def max(pos_1, pos_2):
+    '''retorna 1 se pos_1 == 1 == pos_2 e se pos_1 != pos_2'''
+    if pos_1 != pos_2 or (pos_1 == 1 and pos_2 == 1):
+        return 1
+    return 0
+
+def clone(matriz):
+    '''cria um  clone da matriz de adjacencias '''
+    matrizClone = criaMatriz(matriz)
+    for i in range(len(matriz)):
+        for j in range(len(matriz)):
+            if matriz[i][j] != 1:
+                matrizClone[i][j] = 0
+            else: matrizClone[i][j] = 1
+    return matrizClone
+
+def warshall(matriz_adjacencia):
+    E = clone(matriz_adjacencia)
+    for i in range(len(E)):
+        for j in range(len(E)):
+            if E[j][i] == 1:
+                for k in range(len(E)):
+                    E[j][k] = max(E[j][k],E[i][k])
+    return E
+
+def transposta(matriz):
+    '''faz a matriz transposta em relação a matriz de adjacencias'''
+    matriz_transposta = criaMatriz(matriz)
+    for i in range(len(matriz)):
+        for j in range(len(matriz)):
+            matriz_transposta[i][j] = matriz[j][i]
+    return matriz_transposta
+
+
 def nosGrauImpar(matriz):
+    '''retorna uma lista com os dois nos de grau impar se
+    nao conter nenhum no de grau impar retorna uma lista vazia '''
     grau = 0
-    quantNoGrauImpar = 0
-    noImpar = 0
+    matriz_transposta = transposta(matriz)
     nosImpar = []
     for i in range(len(matriz)):
-        grau = matriz[i].count(1)
-        for j in range(len(matriz)-1):
-            if matriz[j+1][i] == 1: 
-                grau += 1
-            if grau %2 != 0:
-                noImpar = i
-        nosImpar.append(noImpar)
-        if grau %2 != 0:
-            quantNoGrauImpar += 1
+        grau += matriz[i].count(1)
+        grau += matriz_transposta[i].count(1)
+        if grau % 2 != 0:
+            nosImpar.append(i)
+        grau = 0
+
     return nosImpar
 
-            
-
 def euleriano(matriz):
+    '''retorna o caminho euleriano em indices'''
     ligacaos = ligacao(matriz)
-    #if conexo(matriz,conbinacoes(matriz)) == True:
+    nosInpar = nosGrauImpar(matriz)
+    proximoNo = None
+    caminho = []
+    if nosInpar == 2:
+        caminho = [nosInpar[0]]
+        proximoNo = nosInpar[0]
+    i = 0
+    if conexo(matriz,conbinacoes(matriz)) == True:
+        while ligacaos != [["#","#"]]*len(ligacaos):
+            if len(nosInpar) == 0:
+                caminho.append(ligacaos[i][0])
+                caminho.append(ligacaos[i][1])
+                proximoNo = ligacaos[i][1]
+                ligacaos[i] = ["#","#"]
+                while ligacaos != [["#","#"]]*len(ligacaos):
+                    if proximoNo == ligacaos[i][0]:
+                        caminho.append(ligacaos[i][1])
+                        proximoNo = ligacaos[i][1]
+                        ligacaos[i] = ["#", "#"]
+                        i = -1
 
+                    elif proximoNo == ligacaos[i][1]:
+                        caminho.append(ligacaos[i][0])
+                        proximoNo = ligacaos[i][0]
+                        ligacaos[i] = ["#", "#"]
+                        i = -1
+
+                    i += 1
+
+            elif len(nosInpar) == 2:
+                if proximoNo == ligacaos[i][0]:
+                    proximoNo = ligacaos[i][1]
+                    caminho.append(ligacaos[i][1])
+                    ligacaos[i] = ["#","#"]
+                    i=-1
+                elif proximoNo == ligacaos[i][1]:
+                    proximoNo = ligacaos[i][0]
+                    caminho.append(ligacaos[i][0])
+                    ligacaos[i] = ["#", "#"]
+                    i=-1
+            i += 1
+    else: caminho =  "O grafico não é conexo"
+    return caminho
 
 for i in range(len(matriz)):
     for j in range(len(matriz)):
         print(matriz[i][j], end=" ")
-print(nosGrauImpar(matriz))
+    print('')
