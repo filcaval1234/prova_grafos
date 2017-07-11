@@ -163,8 +163,17 @@ def ligacao(matriz):
         for j in range(len(matriz)):
             if matriz[i][j] == 1:
                 ligacao.append([i,j])
-
     return ligacao
+
+def ligacao_indice(w,matriz):
+    '''Retorna as ligações de um grafo direcionado partindo de um vertice cujo o indice é w.'''
+    lista_ligacoes = []
+    lista_pesos =[]
+    for j in matriz[w]:
+        if j != 0:
+            lista_pesos.append(j)
+            lista_ligacoes.append([w,matriz[w].index(j)])
+    return lista_pesos, lista_ligacoes
 
 def criaMatriz(matriz1):
     ''' Cria uma matriz NXN de espaços vazios'''
@@ -271,7 +280,40 @@ def euleriano(matriz):
     else: caminho =  "O grafico não é conexo"
     return caminho
 
-for i in range(len(matriz)):
-    for j in range(len(matriz)):
-        print(matriz[i][j], end=" ")
-    print('')
+def dijkstra(indice_partida,indice_chegada,matriz):
+    gamas = [0]*len(matriz)
+    infinito = 1000000
+    betas = [infinito]*len(matriz)
+    pis = [0]*len(matriz)
+
+    gamas[matriz.index(indice_partida)] = 1
+    betas[matriz.index(indice_partida)] = 0
+    w = indice_partida
+
+    while(indice_partida != indice_chegada):
+        pesos, ligacoes = ligacao_indice(indice_partida,matriz)
+        menor_beta = infinito
+        r_asteristico = None
+        for i in range(len(ligacoes)):
+            if gamas[gamas.index(ligacoes[i][1])] == 0 and betas[betas.index(ligacoes[i][1])] > (betas[betas.index(w)] + pesos[i]):
+                betas[betas.index(ligacoes[i][1])] = betas[betas.index(w)] + pesos[i]
+                pis[gamas.index(ligacoes[i][1])] = w
+        for j in range(len(betas)):
+            if betas[j] != infinito and gamas[j] == 0 and betas[j] <= menor_beta:
+                menor_beta = betas[j]
+                r_asteristico = j
+        if r_asteristico == None:
+            break
+
+        gamas[r_asteristico] = 1
+        w = r_asteristico
+    return pis
+
+
+
+
+
+
+
+
+
