@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-from pip.cmdoptions import no_binary
 
 from grafo123 import Grafo
+
 n = ["a", "b", "c", "d"]
-a = {"a1":"a-b", "a2":"b-c", "a3":"c-d", "a4":"d-a" }
+a = {"a1": "a-b", "a2": "b-c", "a3": "c-d", "a4": "d-a"}
 grafo = Grafo(N=n, A=a);
 matriz = grafo.colocaMatriz(a, n)
+
 
 def naoAdjacente(n, matriz):
     listaNaoAdjacente = []
     for i in range(len(matriz)):
         for j in range(len(matriz)):
             if matriz[i][j] == 0:
-                listaNaoAdjacente.append(n[i]+"_"+n[j])
+                listaNaoAdjacente.append(n[i] + "_" + n[j])
     print(listaNaoAdjacente)
+
 
 def existeLaco(matriz):
     for i in range(len(matriz)):
@@ -22,6 +24,7 @@ def existeLaco(matriz):
                 return True
     return False
 
+
 def verificaParalelo(matriz):
     for i in range(len(matriz)):
         for j in range(len(matriz)):
@@ -29,9 +32,11 @@ def verificaParalelo(matriz):
                 return True
     return False
 
+
 def verificaGrau(matriz, vertice, n):
     indiceVertice = n.index(vertice)
     return matriz[indiceVertice].count(1)
+
 
 def grafoCompleto(matriz):
     for i in range(len(matriz)):
@@ -40,6 +45,7 @@ def grafoCompleto(matriz):
                 return False
     return True
 
+
 def conexo(matriz, listaDeConbinacao):
     '''esta e a funcao principal para a questao do grafo ser conexo ou nao
     usando as funcoes arestaExistente(), procura(), conbinacoes()'''
@@ -47,23 +53,25 @@ def conexo(matriz, listaDeConbinacao):
         arestaAdja = arestaExistente(matriz, k)
         for i in range(len(arestaAdja[1])):
             if [arestaAdja[0], arestaAdja[1][i]] in listaDeConbinacao:
-                del(listaDeConbinacao[listaDeConbinacao.index([arestaAdja[0], arestaAdja[1][i]])])
+                del (listaDeConbinacao[listaDeConbinacao.index([arestaAdja[0], arestaAdja[1][i]])])
                 if len(listaDeConbinacao) == 0:
                     return True
 
     for j in range(len(listaDeConbinacao)):
-        if procura(listaDeConbinacao[j][1],listaDeConbinacao[j][0]) == True:
+        if procura(listaDeConbinacao[j][1], listaDeConbinacao[j][0]) == True:
             listaDeConbinacao[j] = '#'
 
     if listaDeConbinacao.count("#") == len(listaDeConbinacao):
         return True
-    else: return False
-    
-def procura(indiceDeProcura,procurado, procuradoAnterior = -1):
+    else:
+        return False
+
+
+def procura(indiceDeProcura, procurado, procuradoAnterior=-1):
     '''procura um caminho de um no qualquer a outro, tambem e utilizada para
     procurar ciclos'''
     a = False
-    l = arestaExistente(matriz,indiceDeProcura,procuradoAnterior)
+    l = arestaExistente(matriz, indiceDeProcura, procuradoAnterior)
     if procurado in l[1]:
         a = True
         return a
@@ -73,9 +81,10 @@ def procura(indiceDeProcura,procurado, procuradoAnterior = -1):
         except:
             return a
         procuradoAnterior = l[0]
-        del(l[1][0])
-        a = procura(indiceDeProcura=novoIndiceDeProcura,procurado=procurado, procuradoAnterior=procuradoAnterior)
+        del (l[1][0])
+        a = procura(indiceDeProcura=novoIndiceDeProcura, procurado=procurado, procuradoAnterior=procuradoAnterior)
     return a
+
 
 def conbinacoes(matriz):
     '''retorna uma matriz com todas as conbinacoes possiveis de ligacoes entre os nos
@@ -83,9 +92,10 @@ def conbinacoes(matriz):
     conbinacao = []
     for i in range(len(matriz)):
         for j in range(len(matriz)):
-            if i is not j and [j,i] not in conbinacao:
-                conbinacao.append([i,j])
+            if i is not j and [j, i] not in conbinacao:
+                conbinacao.append([i, j])
     return conbinacao
+
 
 def arestaExistente(matriz, index, numeroHaSerRetirado=-1):
     '''funcao cuja finalidade e retornar uma matriz cuja sua representatividade e relacionar
@@ -93,7 +103,7 @@ def arestaExistente(matriz, index, numeroHaSerRetirado=-1):
     todos os vertices em que 0 esta ligado diretamente
     retornando algo do tipo [0,[1,2,3,...n]] onde 0 e passado por parametro e [1,2,3,...n] sao
     os vertices ligados a 0'''
-    arestaExiste = [index,[]]
+    arestaExiste = [index, []]
     for i in range(len(matriz)):
         if matriz[index][i] == 1:
             arestaExiste[1].append(i)
@@ -101,12 +111,13 @@ def arestaExistente(matriz, index, numeroHaSerRetirado=-1):
             arestaExiste[1].append(i)
     if numeroHaSerRetirado in arestaExiste[1]:
         try:
-            del(arestaExiste[1][arestaExiste[1].index(numeroHaSerRetirado)])
+            del (arestaExiste[1][arestaExiste[1].index(numeroHaSerRetirado)])
         except:
             print()
     return arestaExiste
 
-def caminhoAresta(valor, listacaminho, listaindex,tamanho, i=1):
+
+def caminhoAresta(valor, listacaminho, listaindex, tamanho, i=1):
     '''esta funcao usa de outras 4 funcoes ( tiraRepetido(), excluiRepetido(),
         engrauraUm() e salva Caminho) onde sua finalidade e engraurar o caminho de
         tamanho aleatorio passado pelo parametro tamanho'''
@@ -116,9 +127,10 @@ def caminhoAresta(valor, listacaminho, listaindex,tamanho, i=1):
         if len(listacaminho) is not tamanho:
             tiraRepetido(listacaminho, valor, listaindex[i])
             excluirepetido(listacaminho)
-        caminhoAresta(listaindex[i], listacaminho, listaindex,tamanho,i+1)
-    caminhoAresta(valor, listacaminho, listaindex,tamanho, i+1)
+        caminhoAresta(listaindex[i], listacaminho, listaindex, tamanho, i + 1)
+    caminhoAresta(valor, listacaminho, listaindex, tamanho, i + 1)
     return
+
 
 def tiraRepetido(lista, valor1, valor2):
     ''' esta funcao recebe uma lista e dois valores (valor1 e valor2)
@@ -129,18 +141,20 @@ def tiraRepetido(lista, valor1, valor2):
     if valor2 not in lista:
         lista.append(valor2)
 
+
 def excluirepetido(lista):
     '''este trecho de codigo como o nome diz exclui o repetido recebendo uma lista
     como parametro... substitui o primeiro item repetido por ["-","-"] depois o exclui'''
-    for i in range(len(lista)-1):
-        if lista[i][0] == lista[i+1][0]:
-            lista[i] = ["-","-"]
+    for i in range(len(lista) - 1):
+        if lista[i][0] == lista[i + 1][0]:
+            lista[i] = ["-", "-"]
     for i in range(len(lista)):
         try:
-            if lista[i] == ["-","-"]:
-                del(lista[i])
+            if lista[i] == ["-", "-"]:
+                del (lista[i])
         except:
             continue
+
 
 def engrauraUM(matriz):
     '''esta funcao salva os indices de todas as arestas, ou seja, salva
@@ -150,30 +164,34 @@ def engrauraUM(matriz):
     for i in range(len(matriz)):
         for j in range(len(matriz)):
             if matriz[i][j] == existeLigacao:
-                listaIndex.append([i,j])
+                listaIndex.append([i, j])
     return listaIndex
 
-def salvaCaminho(x,y,n):
+
+def salvaCaminho(x, y, n):
     '''retorna algo do tipo "A¹-A²" sendo A¹ e A² vertices '''
-    return  n[x]+"-"+n[y]
+    return n[x] + "-" + n[y]
+
 
 def ligacao(matriz):
     ligacao = []
     for i in range(len(matriz)):
         for j in range(len(matriz)):
             if matriz[i][j] == 1:
-                ligacao.append([i,j])
+                ligacao.append([i, j])
     return ligacao
 
-def ligacao_indice(w,matriz):
+
+def ligacao_indice(w, matriz):
     '''Retorna as ligações de um grafo direcionado partindo de um vertice cujo o indice é w.'''
     lista_ligacoes = []
-    lista_pesos =[]
-    for j in matriz[w]:
-        if j != 0:
-            lista_pesos.append(j)
-            lista_ligacoes.append([w,matriz[w].index(j)])
+    lista_pesos = []
+    for j in range(len(matriz[w])):
+        if matriz[w][j] != 0:
+            lista_pesos.append(matriz[w][j])
+            lista_ligacoes.append([w, j])
     return lista_pesos, lista_ligacoes
+
 
 def criaMatriz(matriz1):
     ''' Cria uma matriz NXN de espaços vazios'''
@@ -184,11 +202,13 @@ def criaMatriz(matriz1):
             matriz[i].append(None)
     return matriz
 
+
 def max(pos_1, pos_2):
     '''retorna 1 se pos_1 == 1 == pos_2 e se pos_1 != pos_2'''
     if pos_1 != pos_2 or (pos_1 == 1 and pos_2 == 1):
         return 1
     return 0
+
 
 def clone(matriz):
     '''cria um  clone da matriz de adjacencias '''
@@ -197,8 +217,10 @@ def clone(matriz):
         for j in range(len(matriz)):
             if matriz[i][j] != 1:
                 matrizClone[i][j] = 0
-            else: matrizClone[i][j] = 1
+            else:
+                matrizClone[i][j] = 1
     return matrizClone
+
 
 def warshall(matriz_adjacencia):
     E = clone(matriz_adjacencia)
@@ -206,8 +228,9 @@ def warshall(matriz_adjacencia):
         for j in range(len(E)):
             if E[j][i] == 1:
                 for k in range(len(E)):
-                    E[j][k] = max(E[j][k],E[i][k])
+                    E[j][k] = max(E[j][k], E[i][k])
     return E
+
 
 def transposta(matriz):
     '''faz a matriz transposta em relação a matriz de adjacencias'''
@@ -233,6 +256,7 @@ def nosGrauImpar(matriz):
 
     return nosImpar
 
+
 def euleriano(matriz):
     '''retorna o caminho euleriano em indices'''
     ligacaos = ligacao(matriz)
@@ -243,14 +267,14 @@ def euleriano(matriz):
         caminho = [nosInpar[0]]
         proximoNo = nosInpar[0]
     i = 0
-    if conexo(matriz,conbinacoes(matriz)) == True:
-        while ligacaos != [["#","#"]]*len(ligacaos):
+    if conexo(matriz, conbinacoes(matriz)) == True:
+        while ligacaos != [["#", "#"]] * len(ligacaos):
             if len(nosInpar) == 0:
                 caminho.append(ligacaos[i][0])
                 caminho.append(ligacaos[i][1])
                 proximoNo = ligacaos[i][1]
-                ligacaos[i] = ["#","#"]
-                while ligacaos != [["#","#"]]*len(ligacaos):
+                ligacaos[i] = ["#", "#"]
+                while ligacaos != [["#", "#"]] * len(ligacaos):
                     if proximoNo == ligacaos[i][0]:
                         caminho.append(ligacaos[i][1])
                         proximoNo = ligacaos[i][1]
@@ -269,35 +293,38 @@ def euleriano(matriz):
                 if proximoNo == ligacaos[i][0]:
                     proximoNo = ligacaos[i][1]
                     caminho.append(ligacaos[i][1])
-                    ligacaos[i] = ["#","#"]
-                    i=-1
+                    ligacaos[i] = ["#", "#"]
+                    i = -1
                 elif proximoNo == ligacaos[i][1]:
                     proximoNo = ligacaos[i][0]
                     caminho.append(ligacaos[i][0])
                     ligacaos[i] = ["#", "#"]
-                    i=-1
+                    i = -1
             i += 1
-    else: caminho =  "O grafico não é conexo"
+    else:
+        caminho = "O grafico não é conexo"
     return caminho
 
-def dijkstra(indice_partida,indice_chegada,matriz):
-    gamas = [0]*len(matriz)
+
+def dijkstra(indice_partida, indice_chegada, matriz):
+    gamas = [0] * len(matriz)
     infinito = 1000000
-    betas = [infinito]*len(matriz)
+    betas = [infinito] * len(matriz)
     pis = [0]*len(matriz)
 
-    gamas[matriz.index(indice_partida)] = 1
-    betas[matriz.index(indice_partida)] = 0
+    gamas[indice_partida] = 1
+    betas[indice_partida] = 0
     w = indice_partida
 
-    while(indice_partida != indice_chegada):
-        pesos, ligacoes = ligacao_indice(indice_partida,matriz)
+    while (w != indice_chegada):
+        pesos, ligacoes = ligacao_indice(w, matriz)
         menor_beta = infinito
         r_asteristico = None
         for i in range(len(ligacoes)):
-            if gamas[gamas.index(ligacoes[i][1])] == 0 and betas[betas.index(ligacoes[i][1])] > (betas[betas.index(w)] + pesos[i]):
-                betas[betas.index(ligacoes[i][1])] = betas[betas.index(w)] + pesos[i]
-                pis[gamas.index(ligacoes[i][1])] = w
+            if gamas[ligacoes[i][1]] == 0 and betas[ligacoes[i][1]] > (
+                betas[w] + pesos[i]):
+                betas[ligacoes[i][1]] = betas[w] + pesos[i]
+                pis[ligacoes[i][1]] = w
         for j in range(len(betas)):
             if betas[j] != infinito and gamas[j] == 0 and betas[j] <= menor_beta:
                 menor_beta = betas[j]
@@ -309,11 +336,5 @@ def dijkstra(indice_partida,indice_chegada,matriz):
         w = r_asteristico
     return pis
 
-
-
-
-
-
-
-
-
+matrizb = [[0,10,1,0,0],[0,0,0,1,0],[0,1,0,0,0],[0,0,0,0,1], [0,0,0,0,0]]
+print(dijkstra(0, 4, matrizb))
